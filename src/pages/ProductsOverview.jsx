@@ -88,14 +88,11 @@ const ProductOverview = () => {
     setDisplayEdit(null);
   };
 
-  // const handleQtyPriceUpdate = () => {
-  //   // Implement the logic to update the product with the new image URL and modified price
+  // const handleQtyPriceUpdate = (productId) => {
   //   const updatedQtyPrice = {
-  //     price: newPrice,
-  //     qty: newQty,
+  //     "price": newPrice,
+  //     "quantity": newQty,
   //   };
-
-  //   // Assuming you have an API endpoint to update a product
   //   axios
   //     .put(
   //       `https://aphia-dev.onrender.com/api/products/${productId}/update`,
@@ -107,11 +104,8 @@ const ProductOverview = () => {
   //       }
   //     )
   //     .then((res) => {
-  //       if (res.ok) {
-  //         // Perform any necessary updates to your state or UI
-  //         // For example, you might refresh the product data or close the modal
-  //         // onUpdate(updatedProduct); // You can update your state if needed
-  //         onClose(); // Close the modal
+  //       if (res.status===200) {
+          
   //       } else {
   //         console.error("Error updating product:", response.status);
   //       }
@@ -119,15 +113,11 @@ const ProductOverview = () => {
   //     .catch((error) => console.error("Error updating product:", error));
   // };
 
-  // Implement the logic to update the product with the new image URL and modified price
-  // onUpdate(product._id, { image: selectedImage, price: newPrice });
-  // onClose();
-
-  const saveImage = (productId) => {
-    if (!newImage) {
-      console.error("Please select an image.");
-      return;
-    }
+  const saveUpdate = (productId) => {
+    const updatedQtyPrice = {
+      "price": newPrice,
+      "quantity": newQty,
+    };
   
     const formData = new FormData();
     formData.append("product_image", newImage);
@@ -147,6 +137,26 @@ const ProductOverview = () => {
         }
       })
       .catch((error) => console.error("Error updating image:", error));
+
+      
+      axios
+        .put(
+          `https://aphia-dev.onrender.com/api/products/${productId}/update`,
+          updatedQtyPrice,
+          {
+            headers: {
+              authorization: token,
+            },
+          }
+        )
+        .then((res) => {
+          if (res.status===200) {
+            
+          } else {
+            console.error("Error updating product:", response.status);
+          }
+        })
+        .catch((error) => console.error("Error updating product:", error));
   };
   
   const handleRemoveImage = (productId, imageIndex) => {
@@ -260,17 +270,24 @@ const ProductOverview = () => {
                   />
                   <button
                     className="text-black"
-                    onClick={() => saveImage(displayEdit)}
+                    onClick={() => saveUpdate(displayEdit)}
                   >
                     Save
                   </button>
-
-                  {/* <input
+                  <label htmlFor="">price</label>
+                  <input
                     type="number"
                     value={newPrice}
-                    onChange={(e) => setPrice(e.target.value)}
-                  /> */}
-                  {/* <button onClick={onClose}>Close</button>  */}
+                    onChange={(e) => setNewPrice(e.target.value)}
+                    className="text-black"
+                    /> 
+                  <label htmlFor="">qty</label>
+                  <input
+                    type="number"
+                    value={newQty}
+                    onChange={(e) => setNewQty(e.target.value)}
+                    className="text-black"
+                  /> 
                 </div>
               </div>
             )}
