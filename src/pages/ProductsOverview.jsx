@@ -4,8 +4,10 @@ import { useState } from "react";
 import { useEffect } from "react";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import CancelIcon from '@mui/icons-material/Cancel';
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import { display } from "@mui/system";
 
 const ProductOverview = () => {
   const [products, setProducts] = useState([]);
@@ -20,6 +22,7 @@ const ProductOverview = () => {
   const [selectedImage, setSelectedImage] = useState(
     product.images && product.images.length > 0 ? product.images[0] : ""
   );
+  const [showIcon, setShowIcon] = useState(null)
   const itemsPerPage = 8;
   let totalPages = useRef();
   const startIndex = (currentPage - 1) * itemsPerPage;
@@ -37,6 +40,7 @@ const ProductOverview = () => {
       });
       setLoading(false);
       const targetRes = res.data.message;
+      console.log(targetRes);
       totalPages.current = Math.ceil(targetRes.length / itemsPerPage);
       const productstoDisplay = targetRes.slice(startIndex, endIndex);
       setProducts(productstoDisplay);
@@ -80,6 +84,7 @@ const ProductOverview = () => {
       .then((res) => {
         console.log(res);
         setProduct(res.data.message);
+
       })
       .catch((error) => console.error("Error fetching images:", error));
   };
@@ -185,6 +190,29 @@ const ProductOverview = () => {
       .catch((error) => console.error('Error removing image:', error));
   };
   
+  const handleUpdateImage = (productId, clickedIndex) => {
+    // If the clicked image is not at index 0, swap it with the image at index 0
+    if (clickedIndex !== 0) {
+      const updatedImages = [...product.images];
+      [updatedImages[0], updatedImages[clickedIndex]] = [
+        updatedImages[clickedIndex],
+        updatedImages[0],
+      ];
+
+      // Update the product state with the new order of images
+      setProduct((prevProduct) => ({
+        ...prevProduct,
+        images: updatedImages,
+      }));
+      setSelectedImage(updatedImages[0]); // Set the selected image to the one at index 0
+    }
+  };
+
+  const handleShowIcon = (productId)=>{
+    setShowIcon(productId)
+  }
+    
+  
 
   return (
     <>
@@ -200,22 +228,29 @@ const ProductOverview = () => {
               <div
                 href={""}
                 key={item._id}
-                className="bg-white pb-2 px-2 pt-6 rounded no-underline hover:scale-[1.02] duration-1000 hover:drop-shadow-lg"
+                className="bg-white pb-2 px-2 pt-6 rounded no-underline hover:scale-[1.02] duration-1000 hover:drop-shadow-lg relative"
+                onMouseEnter={()=>handleShowIcon(item._id)} onMouseLeave={()=>handleShowIcon(null)}
               >
-                <div>
+                <div  className="">
                   <img
                     src={item.images[0]}
                     alt={item.name}
-                    className="basis-80  object-contain"
+                    className="basis-80  object-contain "
                   />
                 </div>
                 <div>
                   <p>{item.name}</p>
                   <p>{item.price}</p>
-                  <div>
-                    <EditIcon onClick={() => handleEdit(item._id)} />
-                    <DeleteIcon onClick={() => handleDisplayDelete(item._id)} />
-                  </div>
+                  {showIcon === item._id && (
+                    <div className="">
+                      <div className="absolute top-1 left-0   bg-white opacity-80 hover:opacity-100 h-fit w-fit p-2 rounded-full ">
+                        <EditIcon className="text-amber-600" onClick={() => handleEdit(item._id)} />
+                      </div>
+                      <div className=" absolute top-1 right-0  opacity-80 hover:opacity-100 h-fit w-fit p-2 rounded-full bg-white">
+                        <DeleteIcon className=" text-red-600" onClick={() => handleDisplayDelete(item._id)} />
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             ))}
@@ -224,37 +259,44 @@ const ProductOverview = () => {
                 className=" bg-black bg-opacity-50 w-full h-full fixed top-0 left-0 flex justify-center items-center"
                 onClick={() => closeDisplayDelete()}
               >
-                <div className="bg-gray-800 w-2/4 h-1/6 text-white p-5 rounded shadow-lg fixed z-50">
-                  <p>Delete selected item?</p>
-                  <small onClick={() => closeDisplayDelete()}>CANCEL</small>
-                  <small
-                    className="text-red-600 ml-3"
-                    onClick={() => handleDelete(displayDelete)}
-                  >
-                    DELETE
-                  </small>
+                <div className="bg-gray-800 w-1/3 h-1/6 text-white p-7 rounded shadow-lg fixed z-50">
+                  <div className="flex ">
+                    <p className="text-lg">Delete selected item?</p>
+                  </div>
+                  <div className="flex justify-end gap-16 mt-4">
+                    <p className="cursor-pointer" onClick={() => closeDisplayDelete()}>CANCEL</p>
+                    <p
+                      className="hover:text-red-500 ml-3 cursor-pointer"
+                      onClick={() => handleDelete(displayDelete)}
+                    >
+                      DELETE
+                    </p>
+                  </div>
                 </div>
               </div>
             )}
             {displayEdit && (
-              <div
-                className="bg-black bg-opacity-50 w-full h-full fixed top-0 left-0 flex justify-center items-center"
-              >
-                <div className="bg-gray-800 text-white p-5 rounded shadow-lg  ">
+              <div className="bg-black bg-opacity-50 w-full h-full fixed top-0 left-0 flex justify-center items-center">
+                <div className="bg-gray-800 text-white p-5 rounded shadow-lg relative">
                   <div>
+                    <div className="absolute top-4 left-7" onClick={()=>closeDisplayEdit(displayEdit)}>
+                      <CancelIcon className=" hover:text-red-600 text-white "  />
+                    </div>
                     <p>{product.name}</p>
-                    <p>{product.price}</p>
-                    <p>{product.quantity}</p>
+                    
                   </div>
                   <div className="flex justify-center gap-[0.6rem] ">
                     {product.images && product.images.length > 0 ? (
                       product.images.map((image, index) => (
-                        <div key={index}>
-                          <button className="text-black" onClick={()=>handleRemoveImage(displayEdit, index)}>remove</button>
+                        <div className=" p-5 relative" key={index}>
+                          <div className="absolute top-0 right-2 opacity-80 hover:opacity-100  p-2 rounded-full bg-gray-800">
+                            <DeleteIcon className="text-red-600 text-lg" onClick={()=>handleRemoveImage(displayEdit, index)} />
+                          </div>
                           <img
                             src={image}
                             alt={`Image ${index + 1}`}
-                            className="w-80"
+                            className="w-80 h-80"
+                            onClick={()=>{handleUpdateImage(displayEdit, index)}}
                           />
                         </div>
                       ))
@@ -277,14 +319,14 @@ const ProductOverview = () => {
                   <label htmlFor="">price</label>
                   <input
                     type="number"
-                    value={newPrice}
+                    value={product.price}
                     onChange={(e) => setNewPrice(e.target.value)}
                     className="text-black"
                     /> 
                   <label htmlFor="">qty</label>
                   <input
                     type="number"
-                    value={newQty}
+                    value={product.quantity}
                     onChange={(e) => setNewQty(e.target.value)}
                     className="text-black"
                   /> 
