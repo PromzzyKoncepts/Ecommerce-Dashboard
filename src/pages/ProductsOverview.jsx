@@ -361,6 +361,7 @@ const ProductOverview = () => {
                     />
                   )}
                 </div>
+                <div></div>
                 <p>
                 &#8358;{Intl.NumberFormat("en-US", { maximumFractionDigits: 0 }).format(product.price)}
                   <EditIcon
