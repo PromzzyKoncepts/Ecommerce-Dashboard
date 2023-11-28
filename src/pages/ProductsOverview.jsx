@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useEffect } from "react";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import CancelIcon from '@mui/icons-material/Cancel';
+import CancelIcon from "@mui/icons-material/Cancel";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { display } from "@mui/system";
@@ -19,10 +19,10 @@ const ProductOverview = () => {
   const [newPrice, setNewPrice] = useState(product.price);
   const [newQty, setNewQty] = useState(product.quantity);
   const [newImage, setNewImage] = useState("");
-  const [selectedImage, setSelectedImage] = useState(
-    product.images && product.images.length > 0 ? product.images[0] : ""
-  );
-  const [showIcon, setShowIcon] = useState(null)
+  const [displayImageInput, setDisplayImageInput] = useState(null);
+  const [displayQuantityInput, setDisplayQuantityInput] = useState(null);
+  const [displayPriceInput, setDisplayPriceInput] = useState(null);
+  const [showIcon, setShowIcon] = useState(null);
   const itemsPerPage = 8;
   let totalPages = useRef();
   const startIndex = (currentPage - 1) * itemsPerPage;
@@ -47,6 +47,7 @@ const ProductOverview = () => {
     };
     fetchData();
   }, [currentPage]);
+
   const handlePrev = () => setCurrentPage((prev) => prev - 1);
   const handleNext = () => setCurrentPage((prev) => prev + 1);
 
@@ -79,12 +80,12 @@ const ProductOverview = () => {
 
   const handleEdit = (productId) => {
     setDisplayEdit(productId);
-    axios
-      .get(`https://aphia-dev.onrender.com/api/products/${productId}`)
-      .then((res) => {
+    setLoading(true);
+    axios.get(`https://aphia-dev.onrender.com/api/products/${productId}`)
+    .then((res) => {
+        setLoading(false)
         console.log(res);
         setProduct(res.data.message);
-
       })
       .catch((error) => console.error("Error fetching images:", error));
   };
@@ -93,88 +94,64 @@ const ProductOverview = () => {
     setDisplayEdit(null);
   };
 
-  // const handleQtyPriceUpdate = (productId) => {
-  //   const updatedQtyPrice = {
-  //     "price": newPrice,
-  //     "quantity": newQty,
-  //   };
-  //   axios
-  //     .put(
-  //       `https://aphia-dev.onrender.com/api/products/${productId}/update`,
-  //       updatedQtyPrice,
-  //       {
-  //         headers: {
-  //           authorization: token,
-  //         },
-  //       }
-  //     )
-  //     .then((res) => {
-  //       if (res.status===200) {
-          
-  //       } else {
-  //         console.error("Error updating product:", response.status);
-  //       }
-  //     })
-  //     .catch((error) => console.error("Error updating product:", error));
-  // };
-
   const saveUpdate = (productId) => {
     const updatedQtyPrice = {
-      "price": newPrice,
-      "quantity": newQty,
+      price: newPrice,
+      quantity: newQty,
     };
-  
+
     const formData = new FormData();
     formData.append("product_image", newImage);
-  
+
     axios
-      .put(`https://aphia-dev.onrender.com/api/products/${productId}/add_image`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          authorization: token,
-        },
-      })
+      .put(
+        `https://aphia-dev.onrender.com/api/products/${productId}/add_image`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            authorization: token,
+          },
+        }
+      )
       .then((res) => {
         if (res.status === 200) {
-          handleEdit(productId)
+          handleEdit(productId);
         } else {
           console.error("Error updating image:", res.status);
         }
       })
       .catch((error) => console.error("Error updating image:", error));
 
-      
-      axios
-        .put(
-          `https://aphia-dev.onrender.com/api/products/${productId}/update`,
-          updatedQtyPrice,
-          {
-            headers: {
-              authorization: token,
-            },
-          }
-        )
-        .then((res) => {
-          if (res.status===200) {
-            
-          } else {
-            console.error("Error updating product:", response.status);
-          }
-        })
-        .catch((error) => console.error("Error updating product:", error));
+    axios
+      .put(
+        `https://aphia-dev.onrender.com/api/products/${productId}/update`,
+        updatedQtyPrice,
+        {
+          headers: {
+            authorization: token,
+          },
+        }
+      )
+      .then((res) => {
+        if (res.status === 200) {
+          handleEdit(productId);
+        } else {
+          console.error("Error updating product:", response.status);
+        }
+      })
+      .catch((error) => console.error("Error updating product:", error));
+    setNewImage(null);
   };
-  
+
   const handleRemoveImage = (productId, imageIndex) => {
-    console.log(imageIndex);
-    console.log(productId);
-    
     axios
       .put(
         `https://aphia-dev.onrender.com/api/products/${productId}/remove_image`,
-        { "delete_index": imageIndex},
+        { delete_index: imageIndex },
         {
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
             authorization: token,
           },
         }
@@ -182,38 +159,54 @@ const ProductOverview = () => {
       .then((res) => {
         if (res.status === 200) {
           console.log(res.data.message);
-          handleEdit(productId)
+          handleEdit(productId);
         } else {
-          console.error('Error removing image:', res.status);
+          console.error("Error removing image:", res.status);
         }
       })
-      .catch((error) => console.error('Error removing image:', error));
+      .catch((error) => console.error("Error removing image:", error));
   };
-  
-  const handleUpdateImage = (productId, clickedIndex) => {
-    // If the clicked image is not at index 0, swap it with the image at index 0
-    if (clickedIndex !== 0) {
-      const updatedImages = [...product.images];
-      [updatedImages[0], updatedImages[clickedIndex]] = [
-        updatedImages[clickedIndex],
-        updatedImages[0],
-      ];
 
-      // Update the product state with the new order of images
-      setProduct((prevProduct) => ({
-        ...prevProduct,
-        images: updatedImages,
-      }));
-      setSelectedImage(updatedImages[0]); // Set the selected image to the one at index 0
+  const handleShowIcon = (productId) => {
+    setShowIcon(productId);
+  };
+
+  const handleDisplayImageInput = (productId) => {
+    setDisplayImageInput(productId);
+  };
+
+  const handleDisplayQuantityInput = (productId) => {
+    setDisplayQuantityInput(productId);
+  };
+
+  const handleDisplayPriceInput = (productId) => {
+    setDisplayPriceInput(productId);
+  };
+
+  const closeAllInput = (productId) => {
+    setDisplayPriceInput(null);
+    setDisplayImageInput(null);
+    setDisplayQuantityInput(null);
+  };
+
+  const getCategoryName = (categoryId) => {
+    switch (categoryId) {
+      case "654114fe0d9aa0b704cd2caa":
+        return "Footwears"; 
+      case "6541163f0d9aa0b704cd2cae":
+        return "Male Wear"; 
+      case "654116ae0d9aa0b704cd2cb0":
+        return "Female Wear"; 
+      case "6543ebbe63d73dadba4d7ccc":
+        return "Accessories"; 
+      case "654113f70d9aa0b704cd2ca8":
+        return "Devices"; 
+      case "654116000d9aa0b704cd2cac":
+        return "Electronics"; 
+      default:
+        return "Others"
     }
-  };
-
-  const handleShowIcon = (productId)=>{
-    setShowIcon(productId)
   }
-    
-  
-
   return (
     <>
       {loading ? (
@@ -229,132 +222,194 @@ const ProductOverview = () => {
                 href={""}
                 key={item._id}
                 className="bg-white pb-2 px-2 pt-6 rounded no-underline hover:scale-[1.02] duration-1000 hover:drop-shadow-lg relative"
-                onMouseEnter={()=>handleShowIcon(item._id)} onMouseLeave={()=>handleShowIcon(null)}
+                onMouseEnter={() => handleShowIcon(item._id)}
+                onMouseLeave={() => handleShowIcon(null)}
               >
-                <div  className="">
+                <div className="">
                   <img
                     src={item.images[0]}
                     alt={item.name}
                     className="basis-80  object-contain "
                   />
                 </div>
-                <div>
-                  <p>{item.name}</p>
-                  <p>{item.price}</p>
+                <div className="">
+                  <div>
+                    <p className=" mt-5 font-bold">{item.name}</p>
+                    <div className="flex justify-between mt-5">
+                      <p className="text-amber-600">{getCategoryName(item.category_id)}</p>
+                      <p className="font-bold">&#8358;{Intl.NumberFormat("en-US", { maximumFractionDigits: 0 }).format(item.price)}</p>
+                    </div>
+                  </div>
                   {showIcon === item._id && (
                     <div className="">
                       <div className="absolute top-1 left-0   bg-white opacity-80 hover:opacity-100 h-fit w-fit p-2 rounded-full ">
-                        <EditIcon className="text-amber-600" onClick={() => handleEdit(item._id)} />
+                        <EditIcon
+                          className="text-amber-600"
+                          onClick={() => handleEdit(item._id)}
+                        />
                       </div>
                       <div className=" absolute top-1 right-0  opacity-80 hover:opacity-100 h-fit w-fit p-2 rounded-full bg-white">
-                        <DeleteIcon className=" text-red-600" onClick={() => handleDisplayDelete(item._id)} />
+                        <DeleteIcon
+                          className=" text-red-600"
+                          onClick={() => handleDisplayDelete(item._id)}
+                        />
                       </div>
                     </div>
                   )}
                 </div>
               </div>
             ))}
-            {displayDelete && (
-              <div
-                className=" bg-black bg-opacity-50 w-full h-full fixed top-0 left-0 flex justify-center items-center"
-                onClick={() => closeDisplayDelete()}
-              >
-                <div className="bg-gray-800 w-1/3 h-1/6 text-white p-7 rounded shadow-lg fixed z-50">
-                  <div className="flex ">
-                    <p className="text-lg">Delete selected item?</p>
-                  </div>
-                  <div className="flex justify-end gap-16 mt-4">
-                    <p className="cursor-pointer" onClick={() => closeDisplayDelete()}>CANCEL</p>
-                    <p
-                      className="hover:text-red-500 ml-3 cursor-pointer"
-                      onClick={() => handleDelete(displayDelete)}
-                    >
-                      DELETE
-                    </p>
-                  </div>
-                </div>
-              </div>
-            )}
-            {displayEdit && (
-              <div className="bg-black bg-opacity-50 w-full h-full fixed top-0 left-0 flex justify-center items-center">
-                <div className="bg-gray-800 text-white p-5 rounded shadow-lg relative">
-                  <div>
-                    <div className="absolute top-4 left-7" onClick={()=>closeDisplayEdit(displayEdit)}>
-                      <CancelIcon className=" hover:text-red-600 text-white "  />
-                    </div>
-                    <p>{product.name}</p>
-                    
-                  </div>
-                  <div className="flex justify-center gap-[0.6rem] ">
-                    {product.images && product.images.length > 0 ? (
-                      product.images.map((image, index) => (
-                        <div className=" p-5 relative" key={index}>
-                          <div className="absolute top-0 right-2 opacity-80 hover:opacity-100  p-2 rounded-full bg-gray-800">
-                            <DeleteIcon className="text-red-600 text-lg" onClick={()=>handleRemoveImage(displayEdit, index)} />
-                          </div>
-                          <img
-                            src={image}
-                            alt={`Image ${index + 1}`}
-                            className="w-80 h-80"
-                            onClick={()=>{handleUpdateImage(displayEdit, index)}}
-                          />
-                        </div>
-                      ))
-                    ) : (
-                      <p>No images available</p>
-                    )}
-                  </div>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    placeholder="+"
-                    onChange={(e) => setNewImage(e.target.files[0])}
-                  />
-                  <button
-                    className="text-black"
-                    onClick={() => saveUpdate(displayEdit)}
-                  >
-                    Save
-                  </button>
-                  <label htmlFor="">price</label>
-                  <input
-                    type="number"
-                    value={product.price}
-                    onChange={(e) => setNewPrice(e.target.value)}
-                    className="text-black"
-                    /> 
-                  <label htmlFor="">qty</label>
-                  <input
-                    type="number"
-                    value={product.quantity}
-                    onChange={(e) => setNewQty(e.target.value)}
-                    className="text-black"
-                  /> 
-                </div>
-              </div>
-            )}
-          </div>
-          <div className="mx-auto w-fit flex gap-5 shadow-md p-2 mt-2 rounded-sm bg-orange-400 h-14 active:bg-orange-500">
-            <button
-              onClick={handlePrev}
-              disabled={currentPage === 1}
-              className="disabled:opacity-40"
-            >
-              {<ArrowBackIosIcon />}
-            </button>
-            <p className="">
-              {currentPage} of {totalPages.current}
-            </p>
-            <button
-              onClick={handleNext}
-              disabled={currentPage === totalPages.current}
-              className=" disabled:opacity-40"
-            >
-              {<ArrowForwardIosIcon />}
-            </button>
           </div>
         </div>
       )}
+
+      {displayDelete && (
+        <div
+          className=" bg-black bg-opacity-50 w-full h-full fixed top-0 left-0 flex justify-center items-center"
+          onClick={() => closeDisplayDelete()}
+        >
+          <div className="bg-gray-800 w-1/3 h-1/6 text-white p-7 rounded shadow-lg fixed z-50">
+            <div className="flex ">
+              <p className="text-lg">Delete selected item?</p>
+            </div>
+            <div className="flex justify-end gap-16 mt-4">
+              <p
+                className="cursor-pointer"
+                onClick={() => closeDisplayDelete()}
+              >
+                CANCEL
+              </p>
+              <p
+                className="hover:text-red-500 ml-3 cursor-pointer"
+                onClick={() => handleDelete(displayDelete)}
+              >
+                DELETE
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+      {displayEdit &&
+        (loading ? (
+          <div className="p-8 w-10/12 mx-auto flex items-center justify-center h-[70vh]">
+            <p className=" animate-spin h-5 w-5 border-2 border-zinc-800 border-x-transparent rounded-full p-4 "></p>
+          </div>
+        ) : (
+          <div className="fixed h-full w-full inset-0 flex justify-center items-center">
+            <div
+              className="fixed inset-0 bg-black opacity-50 cursor-pointer"
+              onClick={() => closeDisplayEdit(displayEdit)}
+            ></div>
+            <div  className="bg-gray-800 fixed text-white p-5 rounded shadow-lg">
+              <div className="flex justify-between">
+                <div className="" onClick={() => closeDisplayEdit(displayEdit)}>
+                  <CancelIcon className=" hover:text-red-600 text-white " />
+                </div>
+                <div>
+                  <p className="font-semibold text-lg">{product.name}</p>
+                </div>
+                <div>
+                  <button
+                    className="text-black hover:bg-green-600 border-none p-2 text-sm"
+                    onClick={() => {
+                      saveUpdate(displayEdit);
+                      closeAllInput(displayEdit);
+                    }}
+                  >
+                    Save
+                  </button>
+                </div>
+              </div>
+              <div className="flex justify-center gap-[0.6rem] ">
+                {product.images && product.images.length > 0 ? (
+                  product.images.map((image, index) => (
+                    <div className=" p-5 relative" key={index}>
+                      <div className="absolute top-0 right-2 opacity-80 hover:opacity-100  p-2 rounded-full bg-gray-800">
+                        <DeleteIcon
+                          className="text-red-600 text-lg"
+                          onClick={() => handleRemoveImage(displayEdit, index)}
+                        />
+                      </div>
+                      <img
+                        src={image}
+                        alt={`Image ${index + 1}`}
+                        className="w-80 h-80 object-cover"
+                        
+                      />
+                    </div>
+                  ))
+                ) : (
+                  <p>No images available</p>
+                )}
+              </div>
+              <div className="">
+                <div className="flex gap-2 justify-between bg-gray-700 rounded w-fit p-2 mx-auto">
+                  <EditIcon
+                    onClick={() => handleDisplayQuantityInput(displayEdit)}
+                    fontSize="small"
+                    className="hover:text-green-600"
+                    />
+                    <p>
+                      {product.quantity}
+                    </p>
+                  {displayQuantityInput && (
+                    <input
+                      type="number"
+                      value={newQty}
+                       onChange={(e) => setNewQty(e.target.value)}
+                      className="text-white bg-gray-700 border-b outline-none ml-3 w-20"
+                    />
+                  )}
+                </div>
+                <p>
+                &#8358;{Intl.NumberFormat("en-US", { maximumFractionDigits: 0 }).format(product.price)}
+                  <EditIcon
+                    onClick={() => handleDisplayPriceInput(displayEdit)}
+                  />
+                  {displayPriceInput && (
+                    <input
+                      type="number"
+                      value={newPrice}
+                      onChange={(e) => setNewPrice(e.target.value)}
+                      className="text-black"
+                    />
+                  )}
+                </p>
+                <p onClick={() => handleDisplayImageInput(displayEdit)}>
+                  Add Image
+                  {displayImageInput && (
+                    <input
+                      type="file"
+                      accept="image/*"
+                      placeholder="+"
+                      onChange={(e) => setNewImage(e.target.files[0])}
+                    />
+                  )}
+                </p>
+              </div>
+            </div>
+          </div>
+        ))}
+
+      <div className="mx-auto w-fit flex gap-5 shadow-md p-2 mt-2 rounded-sm bg-orange-400 h-14 active:bg-orange-500">
+        <button
+          onClick={handlePrev}
+          disabled={currentPage === 1}
+          className="disabled:opacity-40"
+        >
+          {<ArrowBackIosIcon />}
+        </button>
+        <p className="">
+          {currentPage} of {totalPages.current}
+        </p>
+        <button
+          onClick={handleNext}
+          disabled={currentPage === totalPages.current}
+          className=" disabled:opacity-40"
+        >
+          {<ArrowForwardIosIcon />}
+        </button>
+      </div>
     </>
   );
 };
