@@ -7,7 +7,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import CancelIcon from "@mui/icons-material/Cancel";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
+import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 import { display } from "@mui/system";
 
 const ProductOverview = () => {
@@ -82,9 +82,10 @@ const ProductOverview = () => {
   const handleEdit = (productId) => {
     setDisplayEdit(productId);
     setLoading(true);
-    axios.get(`https://aphia-dev.onrender.com/api/products/${productId}`)
-    .then((res) => {
-        setLoading(false)
+    axios
+      .get(`https://aphia-dev.onrender.com/api/products/${productId}`)
+      .then((res) => {
+        setLoading(false);
         console.log(res);
         setProduct(res.data.message);
       })
@@ -193,21 +194,21 @@ const ProductOverview = () => {
   const getCategoryName = (categoryId) => {
     switch (categoryId) {
       case "654114fe0d9aa0b704cd2caa":
-        return "Footwears"; 
+        return "Footwears";
       case "6541163f0d9aa0b704cd2cae":
-        return "Male Wear"; 
+        return "Male Wear";
       case "654116ae0d9aa0b704cd2cb0":
-        return "Female Wear"; 
+        return "Female Wear";
       case "6543ebbe63d73dadba4d7ccc":
-        return "Accessories"; 
+        return "Accessories";
       case "654113f70d9aa0b704cd2ca8":
-        return "Devices"; 
+        return "Devices";
       case "654116000d9aa0b704cd2cac":
-        return "Electronics"; 
+        return "Electronics";
       default:
-        return "Others"
+        return "Others";
     }
-  }
+  };
   return (
     <>
       {loading ? (
@@ -237,8 +238,15 @@ const ProductOverview = () => {
                   <div>
                     <p className=" mt-5 font-bold">{item.name}</p>
                     <div className="flex justify-between mt-5">
-                      <p className="text-amber-600">{getCategoryName(item.category_id)}</p>
-                      <p className="font-bold">&#8358;{Intl.NumberFormat("en-US", { maximumFractionDigits: 0 }).format(item.price)}</p>
+                      <p className="text-amber-600">
+                        {getCategoryName(item.category_id)}
+                      </p>
+                      <p className="font-bold">
+                        &#8358;
+                        {Intl.NumberFormat("en-US", {
+                          maximumFractionDigits: 0,
+                        }).format(item.price)}
+                      </p>
                     </div>
                   </div>
                   {showIcon === item._id && (
@@ -250,7 +258,7 @@ const ProductOverview = () => {
                         />
                       </div>
                       <div className=" absolute top-1 right-0  opacity-80 hover:opacity-100 h-fit w-fit p-2 rounded-full bg-white">
-                        <DeleteIcon
+                        <CancelIcon
                           className=" text-red-600"
                           onClick={() => handleDisplayDelete(item._id)}
                         />
@@ -300,18 +308,15 @@ const ProductOverview = () => {
             <div
               className="fixed inset-0 bg-black opacity-50 cursor-pointer"
               onClick={() => closeDisplayEdit(displayEdit)}
-            ></div>
-            <div  className="bg-gray-800 fixed text-white p-5 rounded shadow-lg">
+            ></div>
+            <div className="bg-gray-800 fixed text-white p-5 rounded shadow-lg min-w-[42%]">
               <div className="flex justify-between">
-                <div className="" onClick={() => closeDisplayEdit(displayEdit)}>
-                  <CancelIcon className=" hover:text-red-600 text-white " />
-                </div>
                 <div>
-                  <p className="font-semibold text-lg">{product.name}</p>
+                  <p className="font-semibold text-lg">Edit Product</p>
                 </div>
                 <div>
                   <button
-                    className="text-black hover:bg-green-600 border-none p-2 text-sm"
+                    className="text-black hover:bg-green-600 hover:border-none p-2 text-sm focus:outline-none"
                     onClick={() => {
                       saveUpdate(displayEdit);
                       closeAllInput(displayEdit);
@@ -321,86 +326,89 @@ const ProductOverview = () => {
                   </button>
                 </div>
               </div>
-              <div className="flex justify-center gap-[0.6rem] ">
+              <div className="">
+                <div className="mt-3">
+                  <div className="flex justify-between">
+                    <p>Quantity</p>
+                    {displayQuantityInput && (
+                      <input
+                        type="number"
+                        value={newQty}
+                        onChange={(e) => setNewQty(e.target.value)}
+                        className="text-white bg-gray-700 border-b outline-none ml-3  rounded  pl-2"
+                      />
+                    )}
+                    <EditIcon
+                      onClick={() => handleDisplayQuantityInput(displayEdit)}
+                      fontSize="small"
+                      className="hover:text-green-600"
+                    />
+                  </div>
+                  <div className="flex ">
+                    <p>{product.quantity}</p>
+                  </div>
+                </div>
+                <div className="mt-3">
+                  <div className="flex gap-2 justify-between">
+                    <p>Price</p>
+                    {displayPriceInput && (
+                      <input
+                        type="number"
+                        value={newPrice}
+                        onChange={(e) => setNewPrice(e.target.value)}
+                        className="text-white bg-gray-700 border-b outline-none ml-3 pl-2 rounded"
+                      />
+                    )}
+                    <EditIcon
+                      onClick={() => handleDisplayPriceInput(displayEdit)}
+                      fontSize="small"
+                      className="hover:text-green-600"
+                    />
+                  </div>
+                  <div className="flex ">
+                    <p>
+                      &#8358;
+                      {Intl.NumberFormat("en-US", {
+                        maximumFractionDigits: 0,
+                      }).format(product.price)}
+                    </p>
+                  </div>
+                </div>
+                <div className="mt-2 flex gap-2 ">
+                  <AddPhotoAlternateIcon
+                    onClick={() => handleDisplayImageInput(displayEdit)}
+                    fontSize="small"
+                    className="hover:text-green-600"
+                  />
+                  <small>Add Image</small>
+                  {displayImageInput && (
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => setNewImage(e.target.files[0])}
+                      className="text-white bg-gray-700 border-b outline-none ml-3  rounded"
+                    />
+                  )}
+                </div>
+              </div>
+              <div className="flex gap-3">
                 {product.images && product.images.length > 0 ? (
                   product.images.map((image, index) => (
-                    <div className=" p-5 relative" key={index}>
-                      <div className="absolute top-0 right-2 opacity-80 hover:opacity-100  p-2 rounded-full bg-gray-800">
-                        <DeleteIcon
-                          className="text-red-600 text-lg"
-                          onClick={() => handleRemoveImage(displayEdit, index)}
-                        />
-                      </div>
+                    <div className="relative" key={index}>
+                      <CancelIcon
+                        className="text-red-600 absolute top-0 right-0 opacity-80 hover:opacity-100"
+                        onClick={() => handleRemoveImage(displayEdit, index)}
+                      />
                       <img
                         src={image}
                         alt={`Image ${index + 1}`}
-                        className="w-80 h-80 object-cover"
-                        
+                        className="w-20 h-20 object-cover rounded"
                       />
                     </div>
                   ))
                 ) : (
                   <p>No images available</p>
                 )}
-              </div>
-              <div className="">
-                <div className="flex gap-2 justify-between bg-gray-700 rounded w-fit p-2 mx-auto">
-                  <EditIcon
-                    onClick={() => handleDisplayQuantityInput(displayEdit)}
-                    fontSize="small"
-                    className="hover:text-green-600"
-                    />
-                    <p>
-                      {product.quantity}
-                    </p>
-                  {displayQuantityInput && (
-                    <input
-                      type="number"
-                      value={newQty}
-                       onChange={(e) => setNewQty(e.target.value)}
-                      className="text-white bg-gray-700 border-b outline-none ml-3 w-20"
-                    />
-                  )}
-                </div>
-                <div className="flex gap-2 justify-between bg-gray-700 rounded w-fit p-2 mx-auto">
-                <EditIcon
-                    onClick={() => handleDisplayPriceInput(displayEdit)}
-                    fontSize="small"
-                    className="hover:text-green-600"
-                  />
-                  <p>
-                  &#8358;{Intl.NumberFormat("en-US", { maximumFractionDigits: 0 }).format(product.price)}
-                  </p>
-                  {displayPriceInput && (
-                    <input
-                      type="number"
-                      value={newPrice}
-                      onChange={(e) => setNewPrice(e.target.value)}
-                      className="text-white bg-gray-700 border-b outline-none ml-3 w-20"
-                    />
-                  )}
-                </div>
-                <div className="flex gap-2 justify-between bg-gray-700 rounded w-fit p-2 mx-auto">
-                  <AddPhotoAlternateIcon
-                    onClick={() => handleDisplayImageInput(displayEdit)}
-                    fontSize="small"
-                    className="hover:text-green-600"
-                   />
-                  <small>
-                  Add Image
-                  </small>
-                  {displayImageInput && (
-                    <input
-                      type="file"
-                      accept="image/*"
-                      placeholder="+"
-                      onChange={(e) => setNewImage(e.target.files[0])}
-                      className="text-white bg-gray-700 border-b outline-none ml-3 w-20"
-                    />
-                  )}
-                </div>
-                  
-                
               </div>
             </div>
           </div>
