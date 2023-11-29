@@ -7,6 +7,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import CancelIcon from "@mui/icons-material/Cancel";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import { display } from "@mui/system";
 
 const ProductOverview = () => {
@@ -361,32 +362,45 @@ const ProductOverview = () => {
                     />
                   )}
                 </div>
-                <div></div>
-                <p>
-                &#8358;{Intl.NumberFormat("en-US", { maximumFractionDigits: 0 }).format(product.price)}
-                  <EditIcon
+                <div className="flex gap-2 justify-between bg-gray-700 rounded w-fit p-2 mx-auto">
+                <EditIcon
                     onClick={() => handleDisplayPriceInput(displayEdit)}
+                    fontSize="small"
+                    className="hover:text-green-600"
                   />
+                  <p>
+                  &#8358;{Intl.NumberFormat("en-US", { maximumFractionDigits: 0 }).format(product.price)}
+                  </p>
                   {displayPriceInput && (
                     <input
                       type="number"
                       value={newPrice}
                       onChange={(e) => setNewPrice(e.target.value)}
-                      className="text-black"
+                      className="text-white bg-gray-700 border-b outline-none ml-3 w-20"
                     />
                   )}
-                </p>
-                <p onClick={() => handleDisplayImageInput(displayEdit)}>
+                </div>
+                <div className="flex gap-2 justify-between bg-gray-700 rounded w-fit p-2 mx-auto">
+                  <AddPhotoAlternateIcon
+                    onClick={() => handleDisplayImageInput(displayEdit)}
+                    fontSize="small"
+                    className="hover:text-green-600"
+                   />
+                  <small>
                   Add Image
+                  </small>
                   {displayImageInput && (
                     <input
                       type="file"
                       accept="image/*"
                       placeholder="+"
                       onChange={(e) => setNewImage(e.target.files[0])}
+                      className="text-white bg-gray-700 border-b outline-none ml-3 w-20"
                     />
                   )}
-                </p>
+                </div>
+                  
+                
               </div>
             </div>
           </div>
