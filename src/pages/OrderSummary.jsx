@@ -48,7 +48,7 @@ const OrderSummary = () => {
     return (
       total +
       order.products.reduce(
-        (productTotal, product) => productTotal + product.price,
+        (productTotal, product) => productTotal + product.price * product.quantity,
         0
       )
     );
@@ -70,7 +70,7 @@ const OrderSummary = () => {
             </h2>
             <div className="flex justify-between mb-4 text-lg text-center font-bold">
               <div>Total Order: {totalOrders}</div>
-              <div>Total Sales: ${totalSales.toFixed(2)}</div>
+              <div>Total Sales: ₦{totalSales.toFixed(2)}</div>
             </div>
             {orders.length === 0 ? (
               <p className="text-center font-bold text-2xl flex items-center justify-center h-[80vh]">
