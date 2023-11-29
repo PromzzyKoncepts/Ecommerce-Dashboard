@@ -1,4 +1,4 @@
-function Home(params) {
+function Home() {
     return(
         <>
         <div className="bg-black text-cyan-400 text-lg">
