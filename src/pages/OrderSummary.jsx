@@ -4,6 +4,7 @@ import "../stylesheets/orderSummary.css";
 import { ArrowDropDown, ArrowDropUp } from "@mui/icons-material";
 import { formatDistanceToNow } from "date-fns";
 
+
 const OrderSummary = () => {
   const token = localStorage.getItem("authToken");
   const [orders, setOrders] = useState([]);
@@ -70,11 +71,11 @@ const OrderSummary = () => {
             </h2>
             <div className="flex justify-between mb-4 text-lg text-center font-bold">
               <div>Total Order: {totalOrders}</div>
-              <div>Total Sales: ₦{totalSales.toFixed(2)}</div>
+              <div>Total Sales: ${totalSales.toFixed(2)}</div>
             </div>
             {orders.length === 0 ? (
               <p className="text-center font-bold text-2xl flex items-center justify-center h-[80vh]">
-                You have no orders.
+                You have no Orders.
               </p>
             ) : (
               orders.map((order) => (
