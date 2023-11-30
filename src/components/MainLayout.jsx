@@ -128,6 +128,11 @@ const MainLayout = () => {
                             key: "logout",
                             icon: <UploadOutlined />,
                             label: 'Logout',
+                        },
+                        {
+                            key: "login",
+                            icon: <UploadOutlined />,
+                            label: 'Log In',
                         }
                     ]}
                 />
