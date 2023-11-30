@@ -15,8 +15,8 @@ function App() {
           <Route index element={<Dashboard />} />
           <Route path="product-overview" element={<ProductOverview />} />
           <Route path="order-list" element={<OrderSummary />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/addproduct" element={<AddProduct />} />
+          <Route path="login" element={<Login />} />
+          <Route path="add-product" element={<AddProduct />} />
         </Route>
       </Routes>
     </>
