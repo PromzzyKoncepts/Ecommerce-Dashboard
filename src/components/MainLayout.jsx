@@ -7,6 +7,7 @@ import MailIcon from '@mui/icons-material/Mail';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 
 
+
 import {
     MenuFoldOutlined,
     MenuUnfoldOutlined,
@@ -15,7 +16,7 @@ import {
     ShoppingOutlined,
     DollarOutlined,
     SettingOutlined,
-} from '@ant-design/icons';
+} from '@ant-design/icons'; 
 
 import { Layout, Menu, Button, theme } from 'antd';
 import { useNavigate } from 'react-router-dom';
@@ -43,7 +44,7 @@ const MainLayout = () => {
                     mode="inline"
                     defaultSelectedKeys={[""]}
                     onClick={({ key }) => {
-                        if (key == "logout") {
+                        if (key === "logout") {
 
                         } else {
                             navigate(key);
@@ -66,9 +67,9 @@ const MainLayout = () => {
                                     label: 'Add Product',
                                 },
                                 {
-                                    key: "product-list",
+                                    key: "product-overview",
                                     icon: <DashboardOutlined />,
-                                    label: 'Product List',
+                                    label: 'Product Overview',
                                 },
                                 {
                                     key: "add-category",
@@ -160,6 +161,7 @@ const MainLayout = () => {
                                 <NotificationsIcon color="action" />
                             </Badge>
                         </div>
+
                         <div>
                             <img src={Aphia} alt='imgg' className='w-8'/>
                         </div>
