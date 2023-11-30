@@ -14,7 +14,7 @@ const Data = [
     price: 0,
     Time: '',
     status: false,
-    },
+    }, 
     {
     id: 1234,
     products: 'iphone 15',

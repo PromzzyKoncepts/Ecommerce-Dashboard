@@ -1,90 +1,21 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { HiArrowTrendingUp, HiArrowTrendingDown } from "react-icons/hi2";
-import { Column } from '@ant-design/plots';
+import { SalesData } from '../data/SalesData';
 import { Table } from 'antd';
+import BarChart from '../components/BarChart';
+
+
 
 const Dashboard = () => {
-  const data = [
-    {
-      type: 'Jan',
-      sales: 38,
-    },
-    {
-      type: 'Feb',
-      sales: 52,
-    },
-    {
-      type: 'Mar',
-      sales: 61,
-    },
-    {
-      type: 'Apr',
-      sales: 145,
-    },
-    {
-      type: 'May',
-      sales: 48,
-    },
-    {
-      type: 'Jun',
-      sales: 38,
-    },
-    {
-      type: 'July',
-      sales: 38,
-    },
-    {
-      type: 'Aug',
-      sales: 38,
-    },
-    {
-      type: 'Sept',
-      sales: 38,
-    },
-    {
-      type: 'Oct',
-      sales: 98,
-    },
-    {
-      type: 'Nov',
-      sales: 33,
-    },
-    {
-      type: 'Dec',
-      sales: 0,
-    },
-  ];
+  const [salesData, setSalesData] = useState({
+    labels: SalesData.map((data) => data.month),
+    datasets: [{
+      label: "Total Sales",
+      data: SalesData.map((data) => data.sales),
 
-  const config = {
-    data,
-    xField: 'type',
-    yField: 'sales',
-    color: ({type}) => {
-      return "#ffd333";
-    },
-    label: {
-      position: 'middle', // 'top', 'bottom', 'middle',
-      style: {
-        fill: '#FFFFFF',
-        opacity: 0.6,
-      },
-    },
-    xAxis: {
-      label: {
-        autoHide: true,
-        autoRotate: false,
-      },
-    },
-    meta: {
-      type: {
-        alias: 'Months',
-      },
-      sales: {
-        alias: 'Income',
-      },
-    },
-  };
-
+    }]
+  })
+  
   const columns = [
     {
       title: 'SNo',
@@ -160,7 +91,7 @@ const Dashboard = () => {
       <div className='mt-4'>
         <h3 className='mb-8 font-semibold text-2xl mt-10'>Income Statics</h3>
         <div>
-          <Column {...config} />
+          <BarChart chartData={salesData} />
         </div>
       </div>
       <div className='mt-4'>
