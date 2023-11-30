@@ -217,7 +217,7 @@ const ProductOverview = () => {
         </div>
       ) : (
         <div className="w-10/12 mx-auto mt-4 bg-slate-100 pt-6 p-4 rounded-t-lg">
-          <h2 className="pb-4 text-3xl mx-auto w-fit mb-4">Your Products</h2>
+          <h2 className="pb-4 text-3xl mx-auto w-fit mb-4">My Products</h2>
           <div className="flex flex-wrap flex-grow justify-center md:grid md:grid-cols-4 gap-[0.6rem]">
             {products?.map((item) => (
               <div
@@ -274,10 +274,10 @@ const ProductOverview = () => {
 
       {displayDelete && (
         <div
-          className=" bg-black bg-opacity-50 w-full h-full fixed top-0 left-0 flex justify-center items-center"
+          className=" bg-white bg-opacity-50 w-full h-full fixed top-0 left-0 flex justify-center items-center"
           onClick={() => closeDisplayDelete()}
         >
-          <div className="bg-gray-800 w-1/3 h-1/6 text-white p-7 rounded shadow-lg fixed z-50">
+          <div className="bg-amber-600 w-1/3 h-1/6 text-white p-7 rounded shadow-lg fixed z-50">
             <div className="flex ">
               <p className="text-lg">Delete selected item?</p>
             </div>
@@ -289,7 +289,7 @@ const ProductOverview = () => {
                 CANCEL
               </p>
               <p
-                className="hover:text-red-500 ml-3 cursor-pointer"
+                className="hover:text-red-700 ml-3 cursor-pointer"
                 onClick={() => handleDelete(displayDelete)}
               >
                 DELETE
@@ -306,10 +306,10 @@ const ProductOverview = () => {
         ) : (
           <div className="fixed h-full w-full inset-0 flex justify-center items-center">
             <div
-              className="fixed inset-0 bg-black opacity-50 cursor-pointer"
+              className="fixed inset-0 bg-white opacity-50 cursor-pointer"
               onClick={() => closeDisplayEdit(displayEdit)}
             ></div>
-            <div className="bg-gray-800 fixed text-white p-5 rounded shadow-lg min-w-[42%]">
+            <div className="bg-amber-600 fixed text-white p-5 rounded shadow-lg min-w-[42%]">
               <div className="flex justify-between">
                 <div>
                   <p className="font-semibold text-lg">Edit Product</p>
@@ -335,7 +335,7 @@ const ProductOverview = () => {
                         type="number"
                         value={newQty}
                         onChange={(e) => setNewQty(e.target.value)}
-                        className="text-white bg-gray-700 border-b outline-none ml-3  rounded  pl-2"
+                        className="text-white bg-white border-b outline-none ml-3  rounded  pl-2"
                       />
                     )}
                     <EditIcon
@@ -356,7 +356,7 @@ const ProductOverview = () => {
                         type="number"
                         value={newPrice}
                         onChange={(e) => setNewPrice(e.target.value)}
-                        className="text-white bg-gray-700 border-b outline-none ml-3 pl-2 rounded"
+                        className="text-white bg-white border-b outline-none ml-3 pl-2 rounded"
                       />
                     )}
                     <EditIcon
@@ -374,24 +374,27 @@ const ProductOverview = () => {
                     </p>
                   </div>
                 </div>
-                <div className="mt-2 flex gap-2 ">
+                
+              </div>
+              <div className="flex gap-3">
+              <div className="mt-2 ">
+                <div className="flex gap-2 ">
                   <AddPhotoAlternateIcon
                     onClick={() => handleDisplayImageInput(displayEdit)}
                     fontSize="small"
                     className="hover:text-green-600"
                   />
                   <small>Add Image</small>
+                </div>
                   {displayImageInput && (
                     <input
                       type="file"
                       accept="image/*"
                       onChange={(e) => setNewImage(e.target.files[0])}
-                      className="text-white bg-gray-700 border-b outline-none ml-3  rounded"
+                      className="text-white w-20 border-b outline-none ml-3  rounded"
                     />
                   )}
-                </div>
               </div>
-              <div className="flex gap-3">
                 {product.images && product.images.length > 0 ? (
                   product.images.map((image, index) => (
                     <div className="relative" key={index}>
