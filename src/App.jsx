@@ -1,20 +1,24 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
 import "./App.css";
-import Home from "./pages/Home";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
+import ProductOverview from "./pages/ProductsOverview";
+import OrderSummary from "./pages/OrderSummary";
+import Login from "./pages/Login";
+import Dashboard from "./pages/Dashboard";
+import MainLayout from "./components/MainLayout";
 import AddProduct from "./pages/AddProducts";
 
 function App() {
-  const [count, setCount] = useState(0);
-
   return (
     <>
-        <Routes>
-          <Route path="/" element={<Home />} />
+      <Routes>
+        <Route path="/" element={<MainLayout />}>
+          <Route index element={<Dashboard />} />
+          <Route path="product-overview" element={<ProductOverview />} />
+          <Route path="order-list" element={<OrderSummary />} />
+          <Route path="/login" element={<Login />} />
           <Route path="/addproduct" element={<AddProduct />} />
-        </Routes>
+        </Route>
+      </Routes>
     </>
   );
 }
