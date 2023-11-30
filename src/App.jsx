@@ -1,8 +1,10 @@
+
 import "./App.css";
+import Home from "./pages/Home";
 import { Routes, Route } from "react-router-dom";
-//import NavigationBar from "./components/NavigationBar";
-import MainLayout from "./components/MainLayout";
-import Dashboard from "./pages/Dashboard"
+import ProductOverview from "./pages/ProductsOverview";
+import Login from "./pages/Login";
+import OrderSummary from "./pages/OrderSummary";
 
 function App() {
 
@@ -12,6 +14,10 @@ function App() {
           <Route path="/vendor" element={<MainLayout />} >
             <Route index element={<Dashboard />} />
           </Route>
+          <Route path="/order" element={<OrderSummary />} />
+          <Route path="/products" element={<ProductOverview />} />
+          <Route path="/login" element={<Login />} />
+
       </Routes>
     </>
   );
