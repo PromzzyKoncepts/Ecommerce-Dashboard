@@ -44,7 +44,7 @@ const Login = () => {
         setAuthUser(decodedToken);
         setIsLoading(false);
         setErrors("");
-        navigate("/cart");
+        navigate("/");
       } else {
         throw new Error("Authentication failed");
       }
