@@ -17,8 +17,6 @@
     "framer-motion": "^10.16.5",
     "jwt-decode": "^4.0.0",
     "date-fns": "^2.30.0",
-    "@ant-design/charts": "^1.4.3",
-    "@ant-design/icons": "^5.2.6",
     "@emotion/react": "^11.11.1",
     "@mui/icons-material": "^5.14.18",
     "@mui/styled-engine": "^5.14.18",
