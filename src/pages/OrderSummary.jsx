@@ -12,9 +12,9 @@ const OrderSummary = () => {
   const [expandedOrderId, setExpandedOrderId] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const category = (categoryid) => {
-    // Your category switch logic remains the same
-  };
+  // const category = (categoryid) => {
+  //   // Your category switch logic remains the same
+  // };
 
   function convertDate(date) {
     return formatDistanceToNow(new Date(date), { addSuffix: true });
