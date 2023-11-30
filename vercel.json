@@ -1,0 +1,28 @@
+{
+  "routes": [
+    {
+      "src": "/",
+      "dest": "/"
+    },
+    {
+      "src": "/order-list",
+      "dest": "/"
+    },
+    {
+      "src": "/add-product",
+      "dest": "/"
+    },
+    {
+      "src": "/add-category",
+      "dest": "/"
+    },
+    {
+      "src": "/add-product",
+      "dest": "/"
+    },
+    {
+      "src": "/order-reviews",
+      "dest": "/"
+    }
+  ]
+}
