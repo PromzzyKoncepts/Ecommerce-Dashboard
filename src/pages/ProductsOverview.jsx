@@ -273,11 +273,12 @@ const ProductOverview = () => {
       )}
 
       {displayDelete && (
-        <div
-          className=" bg-white bg-opacity-50 w-full h-full fixed top-0 left-0 flex justify-center items-center"
-          onClick={() => closeDisplayDelete()}
-        >
-          <div className="bg-amber-600 w-1/3 h-1/6 text-white p-7 rounded shadow-lg fixed z-50">
+        <div className="inset-0 bg-white bg-opacity-50 fixed flex justify-center items-center">
+          <div
+            className="inset-0 fixed"
+            onClick={() => closeDisplayDelete()}
+          ></div>
+          <div className="bg-amber-600 w-1/3 h-1/6 text-white p-7 rounded shadow-lg fixed">
             <div className="flex ">
               <p className="text-lg">Delete selected item?</p>
             </div>
@@ -304,7 +305,7 @@ const ProductOverview = () => {
             <p className=" animate-spin h-5 w-5 border-2 border-zinc-800 border-x-transparent rounded-full p-4 "></p>
           </div>
         ) : (
-          <div className="fixed h-full w-full inset-0 flex justify-center items-center">
+          <div className="fixed inset-0 flex justify-center items-center">
             <div
               className="fixed inset-0 bg-white opacity-50 cursor-pointer"
               onClick={() => closeDisplayEdit(displayEdit)}
@@ -374,18 +375,17 @@ const ProductOverview = () => {
                     </p>
                   </div>
                 </div>
-                
               </div>
               <div className="flex gap-3">
-              <div className="mt-2 ">
-                <div className="flex gap-2 ">
-                  <AddPhotoAlternateIcon
-                    onClick={() => handleDisplayImageInput(displayEdit)}
-                    fontSize="small"
-                    className="hover:text-green-600"
-                  />
-                  <small>Add Image</small>
-                </div>
+                <div className="mt-2 ">
+                  <div className="flex gap-2 ">
+                    <AddPhotoAlternateIcon
+                      onClick={() => handleDisplayImageInput(displayEdit)}
+                      fontSize="small"
+                      className="hover:text-green-600"
+                    />
+                    <small>Add Image</small>
+                  </div>
                   {displayImageInput && (
                     <input
                       type="file"
@@ -394,7 +394,7 @@ const ProductOverview = () => {
                       className="text-white w-20 border-b outline-none ml-3  rounded"
                     />
                   )}
-              </div>
+                </div>
                 {product.images && product.images.length > 0 ? (
                   product.images.map((image, index) => (
                     <div className="relative" key={index}>
@@ -421,7 +421,7 @@ const ProductOverview = () => {
         <button
           onClick={handlePrev}
           disabled={currentPage === 1}
-          className="disabled:opacity-40"
+          className="disabled:opacity-40 focus:outline-0 hover:border-none"
         >
           {<ArrowBackIosIcon />}
         </button>
@@ -431,7 +431,7 @@ const ProductOverview = () => {
         <button
           onClick={handleNext}
           disabled={currentPage === totalPages.current}
-          className=" disabled:opacity-40"
+          className=" disabled:opacity-40 focus:outline-0 hover:border-none"
         >
           {<ArrowForwardIosIcon />}
         </button>
